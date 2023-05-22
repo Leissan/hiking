@@ -1,0 +1,6 @@
+class AddLocationToHike < ActiveRecord::Migration[6.1]
+  def change
+    add_reference :hikes, :location
+    remove_reference :hikes, :participants
+  end
+end
