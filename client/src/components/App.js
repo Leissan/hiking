@@ -3,10 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NavBar from "./NavBar";
 import Login from "../pages/Login";
 import HikeList from "../pages/hikes/HikeList";
-import NewExercise from "../pages/NewExercise";
-import List from "../pages/exercise/List";
-import Update from "../pages/exercise/Update";
-import Show from "../pages/exercise/Show";
+import HikePage from "../pages/hikes/HikePage";
 
 function App() {
   const [user, setUser] = useState(null);

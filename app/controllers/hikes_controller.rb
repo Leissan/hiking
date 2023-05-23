@@ -10,7 +10,9 @@ class HikesController < ApplicationController
     end
   
     # GET /hikes/1
-    def show; end
+    def show
+        render json: @hike, serializer: HikeSerializer, status: 200
+    end
   
     private
   
