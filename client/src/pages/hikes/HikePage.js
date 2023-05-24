@@ -21,17 +21,18 @@ const HikePage = (currentUser) => {
 
     }, [id]);
 
-    console.log("hike", hike)
-
     useEffect(() => {
-        if(hike) {
+        if (hike) {
             setIsOwner(user.id === hike.owner_id);
+            setComments(hike.comments)
+            const isHikeIncluded = user.participated_hikes.some(
+                (participatedHike) => participatedHike.id === hike.id
+            );
+
+            setIsJoined(isHikeIncluded)
         }
     }, [hike])
 
-    const handleEdit = () => {
-        // Handle edit functionality
-    };
 
     const handleDelete = () => {
         // Simulated API request to delete the hike
@@ -51,90 +52,132 @@ const HikePage = (currentUser) => {
             });
     };
 
+
     const handleJoin = () => {
-        // Handle join functionality
+        fetch(`/hikes/${id}/participants/join`, {
+            method: 'POST', headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((r) => {
+                if (r.ok) {
+                    const participated_hikes = user.participated_hikes
+                    setUser({...user, participated_hikes: [...participated_hikes, hike]})
+                    setIsJoined(true)
+                }
+            })
     };
 
     const handleLeave = () => {
-        // Handle leave functionality
+        fetch(`/hikes/${id}/participants/leave`, {
+            method: 'DELETE',
+        })
+            .then((r) => {
+                if (r.ok) {
+
+                    const updatedParticipatedHikes = user.participated_hikes.filter(
+                        (participatedHike) => participatedHike.id !== hike.id
+                    );
+                    setUser({ ...user, participated_hikes: updatedParticipatedHikes })
+                    setIsJoined(false)
+                }
+            });
     };
 
     const handleCommentSubmit = (e) => {
         e.preventDefault();
 
-        // Simulated API request to add a comment
         const newComment = {
-            user: currentUser.id,
-            text: comment,
+            user: user.id, text: comment,
         };
 
-        // Update the comments state with the new comment
         setComments((prevComments) => [...prevComments, newComment]);
 
-        // Clear the comment input field
         setComment('');
+
+        fetch(`/hikes/${id}/comments`, {
+            method: 'POST', body: JSON.stringify({comment: {text: comment}}), headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((r) => r.json())
+            .then(setComments);
     };
 
     const handleCommentChange = (e) => {
         setComment(e.target.value);
     };
 
+    const handleDeleteComment = (comment_id) => {
+        fetch(`/hikes/${hike.id}/comments/${comment_id}`, {
+            method: 'DELETE',
+        })
+            .then((r) => r.json())
+            .then(setComments)
+            .catch((error) => {
+                console.error('Error deleting hike:', error);
+            });
+    }
+
     if (!hike) {
         return <div>Loading hike data...</div>;
     }
 
-    console.log("!!!!!!!!!!!", user)
+    return (<div>
+        <h1>{hike.title}</h1>
+        <p>{hike.description}</p>
+        <p>Level: {hike.level}</p>
+        <p>Location title: {hike.location_title}</p>
+        <p>Location address: {hike.location_address}</p>
+        <p>Owner ID: {user.id}</p>
 
-    return (
+        {isOwner ? (<>
+            <Button as={Link}>
+                <Link to={`/hikes/${hike.id}/update`} params={{qwe: "hello"}}>Edit hike</Link>
+            </Button>
+            <Button onClick={handleDelete}>Delete hike</Button>
+        </>) : (<>
+            {isJoined ? (<button onClick={handleLeave}>Leave Hike</button>) : (
+                <button onClick={handleJoin}>Join Hike</button>)}
+        </>)}
+
+        <h2>Comments</h2>
         <div>
-            <h1>{hike.title}</h1>
-            <p>{hike.description}</p>
-            <p>Level: {hike.level}</p>
-            <p>Location ID: {hike.location_id}</p>
-            <p>Owner ID: {user.id}</p>
-
-            {isOwner ? (
-                <>
-                    <Button as={Link} to={`/hikes/${hike.id}/update`}>
-                        Edit hike
-                    </Button>
-                    <Button onClick={handleDelete}>Delete hike</Button>
-                </>
+            {comments ? (
+                comments.map((comment, index) => (
+                    <div key={index} className="comment-frame">
+                        <p>User: {comment.user_id}</p>
+                        <p>Comment: {comment.text}</p>
+                        {(user.id === comment.user_id || hike.owner_id === user.id) ?
+                            <>
+                                <button
+                                    className="delete-comment"
+                                    onClick={() => handleDeleteComment(comment.id)}
+                                >
+                                    Delete
+                                </button>
+                            </>
+                            : null
+                        }
+                    </div>
+                ))
             ) : (
-                <>
-                    {isJoined ? (
-                        <button onClick={handleLeave}>Leave Hike</button>
-                    ) : (
-                        <button onClick={handleJoin}>Join Hike</button>
-                    )}
-                </>
-            )}
-
-            <h2>Comments</h2>
-            <div>
-                {comments ?
-                    comments.map((comment, index) => (
-                        <div key={index}>
-                            <p>User: {comment.user}</p>
-                            <p>Comment: {comment.text}</p>
-                        </div>
-                    ))
-                 : <>Put you comment here</>}
-
-            </div>
-
-            {currentUser && (
-                <form onSubmit={handleCommentSubmit}>
-          <textarea
-              value={comment}
-              onChange={handleCommentChange}
-              placeholder="Write a comment..."
-          ></textarea>
-                    <button type="submit">Submit</button>
-                </form>
+                <>Put your comment here</>
             )}
         </div>
-    );
+
+        {user && (
+            <form onSubmit={handleCommentSubmit}>
+    <textarea
+        value={comment}
+        onChange={handleCommentChange}
+        placeholder="Write a comment..."
+    />
+                <button type="submit">Submit</button>
+            </form>
+        )}
+
+    </div>);
 };
 
 export default HikePage;

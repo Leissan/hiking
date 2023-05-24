@@ -16,10 +16,15 @@ Rails.application.routes.draw do
   resources :hikes do
     member do
       resource :owners, controller: "hikes/owners"
-      resource :participants
+      resource :participants, controller: "hikes/participants" do
+        post "/join", to: "hikes/participants#join"
+        delete "/leave", to: "hikes/participants#leave"
+      end
     end
     resources :comments, controller: "hikes/comments"
   end
+
+  resource :location, only: %i[create], controller: "location"
 
   get "*path", to: "fallback#index", constraints: ->(req) { !req.xhr? && req.format.html? }
 

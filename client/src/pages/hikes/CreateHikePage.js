@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 
-const CreateHikePage = () => {
+const CreateHikePage = (currentUser) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [level, setLevel] = useState('');
@@ -14,14 +14,11 @@ const CreateHikePage = () => {
         try {
             // Simulated API request to create a new hike
             const response = await fetch('/hikes', {
-                method: 'POST',
-                body: JSON.stringify({
-                    title,
-                    description,
-                    level,
-                    location_id: locationId,
-                }),
-                headers: {
+                method: 'POST', body: JSON.stringify({
+                    hike: {
+                        title, description, level, location_id: locationId,
+                    }
+                }), headers: {
                     'Content-Type': 'application/json',
                 },
             });
@@ -38,8 +35,11 @@ const CreateHikePage = () => {
         setIsLoading(false);
     };
 
-    return (
-        <div>
+    const handleSelect = (e) => {
+        setLocationId(e.target.value);
+    };
+
+    return (<div>
             <h1>Create Hike</h1>
             <form onSubmit={handleCreate}>
                 <div>
@@ -66,19 +66,18 @@ const CreateHikePage = () => {
                     />
                 </div>
                 <div>
-                    <label>Location ID:</label>
-                    <input
-                        type="text"
-                        value={locationId}
-                        onChange={(e) => setLocationId(e.target.value)}
-                    />
+                    <label>Location:</label>
+                    <select onChange={handleSelect}>
+                        {currentUser.user.locations.map(item => {
+                            return (<option value={item.id} key={item.id}>{item.title}, address: {item.address}</option>);
+                        })}
+                    </select>
                 </div>
                 <button type="submit" disabled={isLoading}>
                     {isLoading ? 'Creating...' : 'Create Hike'}
                 </button>
             </form>
-        </div>
-    );
+        </div>);
 };
 
 export default CreateHikePage;

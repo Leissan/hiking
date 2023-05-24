@@ -8,4 +8,5 @@ class User < ApplicationRecord
     has_many :comments
   
     validates :name, :last_name, presence: true
+    validates :username, uniqueness: true
 end

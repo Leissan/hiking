@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-const UpdateHikePage = ({ currentUser }) => {
+const UpdateHikePage = (currentUser) => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [hike, setHike] = useState(null);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [level, setLevel] = useState('');
+    const [locationId, setLocationId] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         // Simulated fetch to retrieve hike data based on the ID
         const fetchHikeData = async () => {
             try {
-                const response = await fetch(`/api/hikes/${id}`);
+                const response = await fetch(`/hikes/${id}`);
                 const hikeData = await response.json();
                 setHike(hikeData);
                 setTitle(hikeData.title);
                 setDescription(hikeData.description);
                 setLevel(hikeData.level);
+                setLocationId(hikeData.location_id);
             } catch (error) {
                 console.error('Error retrieving hike data:', error);
             }
@@ -34,12 +36,10 @@ const UpdateHikePage = ({ currentUser }) => {
 
         try {
             // Simulated API request to update the hike data
-            await fetch(`/api/hikes/${id}`, {
+            await fetch(`/hikes/${id}/owners`, {
                 method: 'PUT',
                 body: JSON.stringify({
-                    title,
-                    description,
-                    level,
+                    hike: {title, description, level, location_id: locationId},
                 }),
                 headers: {
                     'Content-Type': 'application/json',
@@ -47,11 +47,15 @@ const UpdateHikePage = ({ currentUser }) => {
             });
 
             setIsLoading(false);
-            navigate(`/hike/${id}`);
+            history.push(`/hike/${id}`);
         } catch (error) {
             console.error('Error updating hike:', error);
             setIsLoading(false);
         }
+    };
+
+    const handleSelect = (e) => {
+        setLocationId(e.target.value);
     };
 
     if (!hike) {
@@ -84,6 +88,14 @@ const UpdateHikePage = ({ currentUser }) => {
                         value={level}
                         onChange={(e) => setLevel(e.target.value)}
                     />
+                </div>
+                <div>
+                    <label>Location:</label>
+                    <select onChange={handleSelect}>
+                        {currentUser.user.locations.map(item => {
+                            return (<option value={item.id} key={item.id}>{item.title}, address: {item.address}</option>);
+                        })}
+                    </select>
                 </div>
                 <button type="submit" disabled={isLoading}>
                     {isLoading ? 'Updating...' : 'Update Hike'}

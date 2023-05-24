@@ -1,6 +1,3 @@
-
-# frozen_string_literal: true
-
 class HikesController < ApplicationController
     before_action :set_hike, only: %i[show]
   
@@ -40,3 +37,4 @@ class HikesController < ApplicationController
       params.require(:hike).permit(:title, :description, :location_id, :level)
     end
 end
+  
