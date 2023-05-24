@@ -47,7 +47,7 @@ const UpdateHikePage = (currentUser) => {
             });
 
             setIsLoading(false);
-            history.push(`/hike/${id}`);
+            navigate(`/hike/${id}`);
         } catch (error) {
             console.error('Error updating hike:', error);
             setIsLoading(false);

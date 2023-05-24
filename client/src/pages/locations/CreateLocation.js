@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 const CreateHikePage = () => {
     const [title, setTitle] = useState('');
     const [address, setAdress] = useState('');
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const handleCreate = async (e) => {
         e.preventDefault();
@@ -22,7 +22,7 @@ const CreateHikePage = () => {
             });
 
             if (response.ok) {
-                history.push("/")
+                navigate("/")
             } else {
                 // Handle unsuccessful creation, e.g., display an error message
             }
