@@ -1,6 +1,7 @@
+
 # frozen_string_literal: true
 
-class OwnersController < ApplicationController
+class Hikes::OwnersController < ApplicationController
     before_action :set_hike, only: %i[show update destroy]
   
     # GET /hikes
@@ -8,22 +9,6 @@ class OwnersController < ApplicationController
       @hikes = Hike.where(owner_id: current_user.id)
     end
   
-    # GET /hikes/1
-    def show; end
-  
-    # POST /hikes
-    def create
-      @hike = Hike.new(hike_params)
-      @hike.owner_id = current_user.id
-  
-      if @hike.save
-        redirect_to @hike, notice: "Hike was successfully created."
-      else
-        render :new
-      end
-    end
-  
-    # PATCH/PUT /hikes/1
     def update
       return render json: {} if @hike.owner_id != current_user.id
   
@@ -39,7 +24,7 @@ class OwnersController < ApplicationController
       return render json: {} if @hike.owner_id != current_user.id
   
       @hike.destroy
-      redirect_to hikes_url, notice: "Hike was successfully destroyed."
+      render json: {}, status: 200
     end
   
     private

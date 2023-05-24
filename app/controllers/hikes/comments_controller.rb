@@ -1,26 +1,30 @@
 # frozen_string_literal: true
 
-class CommentsController < ApplicationController
+class Hikes::CommentsController < ApplicationController
+    before_action :set_comments
     def index
-      @comment = Comment.where(hike_id: params[:hike_id])
-      render json: @comment.to_json
+      render json: @comments, each_serializer: CommentSerializer
     end
   
     def create
-      @comment = Comment.new(hike_params)
+      @comment = Comment.new(comment_params)
       @comment.user_id = current_user.id
+      @comment.hike_id = params[:hike_id]
       @comment.save
+  
+      render json: @comments, each_serializer: CommentSerializer
     end
   
     def destroy
-      @comment = Comment.find_by(hike_id: params[:hike_id], id: params[:id])
-      @hike = Hike.find(hike_id: params[:id])
+      hike = Hike.find(params[:hike_id])
+      comment = Comment.find_by(hike_id: hike.id, id: params[:id])
   
-      if @comment.user_id != current_user.id && @comment.user_id != @hike.owner_id
-  
-        render json: {}
+      if comment.user_id != current_user.id && current_user.id != hike.owner_id
+        render json: Comment.where(hike_id: hike.id), each_serializer: CommentSerializer
       else
-        Comment.find_by(hike_id: params[:hike_id], id: params[:id]).destroy
+        Comment.find_by(hike_id: hike.id, id: params[:id]).destroy
+        @comments = set_comments
+        render json: @comments, each_serializer: CommentSerializer
       end
     end
   
@@ -29,5 +33,9 @@ class CommentsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def comment_params
       params.require(:comment).permit(:text)
+    end
+  
+    def set_comments
+      @comments = Comment.where(hike_id: params[:hike_id])
     end
 end

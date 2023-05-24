@@ -1,3 +1,6 @@
+
+# frozen_string_literal: true
+
 class HikesController < ApplicationController
     before_action :set_hike, only: %i[show]
   
@@ -11,7 +14,18 @@ class HikesController < ApplicationController
   
     # GET /hikes/1
     def show
+      render json: @hike, serializer: HikeSerializer, status: 200
+    end
+  
+    def create
+      @hike = Hike.new(hike_params)
+      @hike.owner_id = current_user.id
+  
+      if @hike.save
         render json: @hike, serializer: HikeSerializer, status: 200
+      else
+        render json: {}
+      end
     end
   
     private
@@ -23,6 +37,6 @@ class HikesController < ApplicationController
   
     # Only allow a list of trusted parameters through.
     def hike_params
-      params.require(:hike).permit(:name, :description, :location_id)
+      params.require(:hike).permit(:title, :description, :location_id, :level)
     end
 end

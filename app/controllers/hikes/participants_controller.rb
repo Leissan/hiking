@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ParticipantsController < ApplicationController
+class Hikes::ParticipantsController < ApplicationController
     before_action :set_hike, only: %i[show join leave]
   
     # GET /hikes
