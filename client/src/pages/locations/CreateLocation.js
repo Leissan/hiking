@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
-import {useNavigate} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 
 const CreateHikePage = () => {
     const [title, setTitle] = useState('');
     const [address, setAdress] = useState('');
-    const navigate = useNavigate();
+    const history = useHistory();
 
     const handleCreate = async (e) => {
         e.preventDefault();
@@ -22,7 +22,7 @@ const CreateHikePage = () => {
             });
 
             if (response.ok) {
-                navigate("/")
+                history.push("/")
             } else {
                 // Handle unsuccessful creation, e.g., display an error message
             }
@@ -50,7 +50,7 @@ const CreateHikePage = () => {
                 ></textarea>
             </div>
             <button type="submit">
-                {'Create Hike'}
+                {'Create Location'}
             </button>
         </form>
     </div>);

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 const UpdateHikePage = (currentUser) => {
     const { id } = useParams();
-    const navigate = useNavigate();
+    const history = useHistory();
     const [hike, setHike] = useState(null);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -47,7 +47,7 @@ const UpdateHikePage = (currentUser) => {
             });
 
             setIsLoading(false);
-            navigate(`/hike/${id}`);
+            history.push(`/hike/${id}`);
         } catch (error) {
             console.error('Error updating hike:', error);
             setIsLoading(false);

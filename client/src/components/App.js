@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {Switch, Route} from "react-router-dom";
 import NavBar from "./NavBar";
 import Login from "../pages/Login";
 import HikeList from "../pages/hikes/HikeList";
@@ -49,19 +49,23 @@ function App() {
         <>
             <NavBar user={user} setUser={setUser}/>
             <main>
-                <Routes>
-                    <Route path="/hikes/:id/update" element ={<UpdateHikePage/>}>
+                <Switch>
+                    <Route path="/hikes/:id/update">
+                        <UpdateHikePage user={user}/>
                     </Route>
-                    <Route path="/hikes/:id" element={<HikePage user={user}/>} >
+                    <Route path="/hikes/:id">
+                        <HikePage user={user} />
                     </Route>
-                    <Route path="/hike/create" element ={<CreateHikePage user={user}/>}>
+                    <Route path="/hike/create">
+                        <CreateHikePage user={user}/>
                     </Route>
-                    <Route path="/location/create" element ={<CreateLocation/>}>
+                    <Route path="/location/create">
+                        <CreateLocation/>
                     </Route>
-                    <Route path="/" element={<HikeList user={user}/>}>
+                    <Route path="/">
+                        <HikeList user={user}/>
                     </Route>
-
-                </Routes>
+                </Switch>
             </main>
         </>
     );

@@ -64,7 +64,7 @@ const CreateHikePage = (currentUser) => {
                         value={level}
                         onChange={(e) => setLevel(e.target.value)}
                     />
-                </div>
+             /home/leissan/Development/hiking/client/src/pages   </div>
                 <div>
                     <label>Location:</label>
                     <select onChange={handleSelect}>

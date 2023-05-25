@@ -15,7 +15,7 @@ function NavBar({ user, setUser }) {
   return (
     <Wrapper>
       <Logo>
-        <Link to="/">Hiking App</Link>
+        <Link to="/">Hiking app</Link>
       </Logo>
       <Nav>
         <Button as={Link} to="/">

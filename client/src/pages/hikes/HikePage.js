@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Link, useNavigate, useParams} from 'react-router-dom';
+import {Link, useHistory, useParams} from 'react-router-dom';
 import {Button} from "../../styles";
 
 const HikePage = (currentUser) => {
@@ -10,7 +10,7 @@ const HikePage = (currentUser) => {
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState([]);
     const [user, setUser] = useState([]);
-    const navigate = useNavigate()
+    const history = useHistory()
 
     useEffect(() => {
         // Simulated fetch to retrieve hike data based on the ID
@@ -42,7 +42,7 @@ const HikePage = (currentUser) => {
             .then((r) => {
                 if (r.ok) {
                     // Handle successful deletion, e.g., navigate to a different page
-                    navigate("/")
+                    history.push("/")
                 } else {
                     // Handle unsuccessful deletion, e.g., display an error message
                 }
