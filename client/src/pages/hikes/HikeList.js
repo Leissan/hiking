@@ -3,19 +3,13 @@ import styled from 'styled-components';
 import {Link, useHistory} from "react-router-dom";
 import {Button} from "../../styles";
 
-const HikeList = (currentUser) => {
+const HikeList = ({user}) => {
     const [myHikes, setMyHikes] = useState([]);
     const [allHikes, setAllHikes] = useState([]);
     const [participantHikes, setParticipantHikes] = useState([]);
-    const [user, setUser] = useState(null);
-
-    useEffect(() => {
-        setUser(currentUser.user)
-    }, []);
 
     useEffect(() => {
         if (user) {
-            console.log("user", user)
             fetchMyHikes(user.owned_hikes);
             fetchAllHikes(user.all_hikes);
             fetchParticipantHikes(user.participated_hikes);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 
-const UpdateHikePage = (currentUser) => {
+const UpdateHikePage = ({user, onUpdateHike}) => {
     const { id } = useParams();
     const history = useHistory();
     const [hike, setHike] = useState(null);
@@ -44,10 +44,12 @@ const UpdateHikePage = (currentUser) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-            });
-
-            setIsLoading(false);
-            history.push(`/hike/${id}`);
+            }).then((r) => r.json())
+                .then((t) => {
+                    onUpdateHike(t)
+                    setIsLoading(false);
+                    history.push(`/hike/${id}`);
+                });
         } catch (error) {
             console.error('Error updating hike:', error);
             setIsLoading(false);
@@ -92,7 +94,7 @@ const UpdateHikePage = (currentUser) => {
                 <div>
                     <label>Location:</label>
                     <select onChange={handleSelect}>
-                        {currentUser.user.locations.map(item => {
+                        {user.locations.map(item => {
                             return (<option value={item.id} key={item.id}>{item.title}, address: {item.address}</option>);
                         })}
                     </select>

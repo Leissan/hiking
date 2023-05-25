@@ -12,7 +12,7 @@ class Hikes::OwnersController < ApplicationController
     return render json: {} if @hike.owner_id != current_user.id
 
     if @hike.update(hike_params)
-      redirect_to @hike, notice: "Hike was successfully updated."
+      render json: @hike, serializer: HikeSerializer, status: 200
     else
       render :edit
     end

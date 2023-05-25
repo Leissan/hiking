@@ -10,12 +10,8 @@ import CreateLocation from "../pages/locations/CreateLocation";
 
 function App() {
     const [user, setUser] = useState(null);
-    const [myHikes, setMyHikes] = useState([]);
-    const [otherHikes, setOtherHikes] = useState([]);
-    const [participantHikes, setParticipantHikes] = useState([]);
 
     useEffect(() => {
-        // auto-login
         fetch("/me").then((r) => {
             if (r.ok) {
                 r.json().then(
@@ -25,23 +21,69 @@ function App() {
                 );
             }
         });
-
-        // fetchMyHikes();
-        // fetchOtherHikes();
-        // fetchParticipantHikes();
     }, []);
 
-    useEffect(() => {
-        // auto-login
-        if(user) {
-            setMyHikes(user.owned_hikes);
-            setParticipantHikes(user.participated_hikes);
-        }
 
-        // fetchMyHikes();
-        // fetchOtherHikes();
-        // fetchParticipantHikes();
-    }, [user]);
+    // Add hike to owned_hikes
+    function handleAddOwnedHike(hike) {
+        return setUser({...user, owned_hikes: [...user.owned_hikes, hike]})
+    }
+
+    // Delete hike from owned_hikes
+    function handleDeleteOwnedHike(hikeId) {
+        setUser((prevUser) => {
+            const updatedOwnedHikes = prevUser.owned_hikes.filter((hike) => hike.id !== parseInt(hikeId));
+            return {
+                ...prevUser,
+                owned_hikes: updatedOwnedHikes,
+            };
+        });
+    }
+
+    function handleUpdateOwnedHike(hike) {
+        // setUser((prevUser) => {
+        //     const updatedOwnedHikes = prevUser.owned_hikes.filter((hike) => hike.id !== parseInt(hike.Id));
+        //     return {
+        //         ...prevUser,
+        //         owned_hikes: updatedOwnedHikes,
+        //     };
+        // });
+
+        setUser((prevUser) => {
+            const updatedOwnedHikes = prevUser.owned_hikes.map((h) => {
+                if (h.id === hike.id) {
+                    return {
+                        ...h,
+                        title: hike.title,
+                    };
+                }
+                console.log("h", h)
+                console.log("hike", hike)
+                return h;
+            });
+
+            return {
+                ...prevUser,
+                owned_hikes: updatedOwnedHikes,
+            };
+        });
+    }
+
+    // Add hike to participant_hikes
+    function handleAddParticipantHike(hike) {
+        setUser({...user, participated_hikes: [...user.participated_hikes, hike]})
+    }
+
+    // Delete hike from participant_hikes
+    function handleDeleteParticipantHike(hikeId) {
+        setUser((prevUser) => {
+            const updatedParticipantHikes = prevUser.participated_hikes.filter((hike) => hike.id !== parseInt(hikeId));
+            return {
+                ...prevUser,
+                participated_hikes: updatedParticipantHikes,
+            };
+        });
+    }
 
     if (!user) return <Login onLogin={setUser}/>;
 
@@ -51,13 +93,13 @@ function App() {
             <main>
                 <Switch>
                     <Route path="/hikes/:id/update">
-                        <UpdateHikePage user={user}/>
+                        <UpdateHikePage user={user} onUpdateHike={handleUpdateOwnedHike}/>
                     </Route>
                     <Route path="/hikes/:id">
-                        <HikePage user={user} />
+                        <HikePage user={user} onDeleteHike={handleDeleteOwnedHike} onJoinHike={handleAddParticipantHike} onLeaveHike={handleDeleteParticipantHike}/>
                     </Route>
                     <Route path="/hike/create">
-                        <CreateHikePage user={user}/>
+                        <CreateHikePage user={user} onCreateHike={handleAddOwnedHike}/>
                     </Route>
                     <Route path="/location/create">
                         <CreateLocation/>
