@@ -63,7 +63,7 @@ function SignUpForm({onLogin}) {
                 />
             </FormField>
             <FormField>
-                <Label htmlFor="lastName">Name</Label>
+                <Label htmlFor="lastName"> Last Name</Label>
                 <Input
                     type="text"
                     id="lastName"
