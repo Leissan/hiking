@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
+import UserContext from '../../components/UserContext';
 
-const UpdateHikePage = ({user, onUpdateHike}) => {
+const UpdateHikePage = ({onUpdateHike}) => {
+    const { user } = useContext(UserContext);
     const { id } = useParams();
     const history = useHistory();
     const [hike, setHike] = useState(null);

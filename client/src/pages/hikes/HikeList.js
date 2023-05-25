@@ -1,9 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import styled from 'styled-components';
 import {Link, useHistory} from "react-router-dom";
 import {Button} from "../../styles";
+import UserContext from '../../components/UserContext';
 
-const HikeList = ({user}) => {
+const HikeList = () => {
+    const { user } = useContext(UserContext);
     const [myHikes, setMyHikes] = useState([]);
     const [allHikes, setAllHikes] = useState([]);
     const [participantHikes, setParticipantHikes] = useState([]);

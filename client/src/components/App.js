@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useContext} from "react";
 import {Switch, Route} from "react-router-dom";
 import NavBar from "./NavBar";
 import Login from "../pages/Login";
@@ -7,10 +7,11 @@ import HikePage from "../pages/hikes/HikePage";
 import CreateHikePage from "../pages/hikes/CreateHikePage";
 import UpdateHikePage from "../pages/hikes/UpdateHikePage";
 import CreateLocation from "../pages/locations/CreateLocation";
+import UserContext from './UserContext';
 
 function App() {
     const [user, setUser] = useState(null);
-
+    
     useEffect(() => {
         fetch("/me").then((r) => {
             if (r.ok) {
@@ -89,26 +90,28 @@ function App() {
 
     return (
         <>
-            <NavBar user={user} setUser={setUser}/>
+          <UserContext.Provider value={{ user, setUser }}>
+            <NavBar/>
             <main>
                 <Switch>
                     <Route path="/hikes/:id/update">
-                        <UpdateHikePage user={user} onUpdateHike={handleUpdateOwnedHike}/>
+                        <UpdateHikePage  onUpdateHike={handleUpdateOwnedHike}/>
                     </Route>
                     <Route path="/hikes/:id">
-                        <HikePage user={user} onDeleteHike={handleDeleteOwnedHike} onJoinHike={handleAddParticipantHike} onLeaveHike={handleDeleteParticipantHike}/>
+                        <HikePage  onDeleteHike={handleDeleteOwnedHike} onJoinHike={handleAddParticipantHike} onLeaveHike={handleDeleteParticipantHike}/>
                     </Route>
                     <Route path="/hike/create">
-                        <CreateHikePage user={user} onCreateHike={handleAddOwnedHike}/>
+                        <CreateHikePage  onCreateHike={handleAddOwnedHike}/>
                     </Route>
                     <Route path="/location/create">
                         <CreateLocation/>
                     </Route>
                     <Route path="/">
-                        <HikeList user={user}/>
+                        <HikeList />
                     </Route>
                 </Switch>
             </main>
+            </UserContext.Provider>
         </>
     );
 }

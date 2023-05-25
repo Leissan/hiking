@@ -1,9 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {Link, useHistory, useParams} from 'react-router-dom';
 import {Button} from "../../styles";
+import UserContext from '../../components/UserContext';
 
-const HikePage = ({user, onDeleteHike, onJoinHike, onLeaveHike}) => {
+const HikePage = ({onDeleteHike, onJoinHike, onLeaveHike}) => {
     const {id} = useParams();
+    const { user } = useContext(UserContext);
     const [hike, setHike] = useState(null);
     const [isOwner, setIsOwner] = useState(false);
     const [isJoined, setIsJoined] = useState(false);
@@ -60,6 +62,7 @@ const HikePage = ({user, onDeleteHike, onJoinHike, onLeaveHike}) => {
                     const participated_hikes = user.participated_hikes
                     onJoinHike(hike)
                     setIsJoined(true)
+                    history.push("/")
                 }
             })
     };
