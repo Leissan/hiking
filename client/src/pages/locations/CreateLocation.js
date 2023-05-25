@@ -1,9 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {useHistory} from "react-router-dom";
+import UserContext from '../../components/UserContext';
 
-const CreateHikePage = () => {
+const CreateLocation = () => {
+    const { user, setUser } = useContext(UserContext);
     const [title, setTitle] = useState('');
-    const [address, setAdress] = useState('');
+    const [address, setAddress] = useState('');
     const history = useHistory();
 
     const handleCreate = async (e) => {
@@ -22,6 +24,13 @@ const CreateHikePage = () => {
             });
 
             if (response.ok) {
+                
+                response.json().then ((newlocation) => {
+                   const locations = user.locations
+                   setTitle("")
+                   setAddress("")
+                   setUser({...user, locations: [...locations, newlocation]})
+                     } )
                 history.push("/")
             } else {
                 // Handle unsuccessful creation, e.g., display an error message
@@ -46,7 +55,7 @@ const CreateHikePage = () => {
                 <label>Address:</label>
                 <textarea
                     value={address}
-                    onChange={(e) => setAdress(e.target.value)}
+                    onChange={(e) => setAddress(e.target.value)}
                 ></textarea>
             </div>
             <button type="submit">
@@ -56,4 +65,4 @@ const CreateHikePage = () => {
     </div>);
 };
 
-export default CreateHikePage;
+export default CreateLocation;
