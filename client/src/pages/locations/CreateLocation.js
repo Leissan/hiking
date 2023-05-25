@@ -26,6 +26,7 @@ const CreateLocation = () => {
             if (response.ok) {
                 
                 response.json().then ((newlocation) => {
+
                    const locations = user.locations
                    setTitle("")
                    setAddress("")

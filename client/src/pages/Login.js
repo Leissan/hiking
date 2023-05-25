@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import styled from "styled-components";
 import LoginForm from "../components/LoginForm";
 import SignUpForm from "../components/SignUpForm";
 import { Button } from "../styles";
+import UserContext from "../components/UserContext";
 
-function Login({ onLogin }) {
+function Login() {
+  const { setUser} = useContext(UserContext)
   const [showLogin, setShowLogin] = useState(true);
 
   return (
@@ -12,7 +14,7 @@ function Login({ onLogin }) {
       <Logo>Hiking?</Logo>
       {showLogin ? (
         <>
-          <LoginForm onLogin={onLogin} />
+          <LoginForm onLogin={setUser} />
           <Divider />
           <p>
             Don't have an account? &nbsp;
@@ -23,7 +25,7 @@ function Login({ onLogin }) {
         </>
       ) : (
         <>
-          <SignUpForm onLogin={onLogin} />
+          <SignUpForm onLogin={setUser} />
           <Divider />
           <p>
             Already have an account? &nbsp;

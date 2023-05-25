@@ -86,7 +86,7 @@ function App() {
         });
     }
 
-    if (!user) return <Login onLogin={setUser}/>;
+    if (!user) return <UserContext.Provider value={{user, setUser}} ><Login/></UserContext.Provider>;
 
     return (
         <>

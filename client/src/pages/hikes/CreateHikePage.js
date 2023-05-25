@@ -72,6 +72,7 @@ const CreateHikePage = ({onCreateHike}) => {
                 <label>Location:</label>
                 <select onChange={handleSelect}>
                     {user.locations.map(item => {
+                        
                         return (<option value={item.id} key={item.id}>{item.title}, address: {item.address}</option>);
                     })}
                 </select>

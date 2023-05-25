@@ -2,9 +2,9 @@
 
 class LocationController < ApplicationController
   def create
-    location = Location.new(location_params)
-    if location.save
-      render json: {},  status: 201
+    @location = Location.new(location_params)
+    if @location.save
+      render json: @location,  status: 201
     else
       render json: {},  status: 422
     end
