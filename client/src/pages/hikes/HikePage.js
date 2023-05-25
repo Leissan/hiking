@@ -117,7 +117,7 @@ const HikePage = ({user, onDeleteHike, onJoinHike, onLeaveHike}) => {
     return (
         <div>
             <h1>{hike.title}</h1>
-            <p>{hike.description}</p>
+            <p>Description: {hike.description}</p>
             <p>Level: {hike.level}</p>
             <p>Location title: {hike.location_title}</p>
             <p>Location address: {hike.location_address}</p>
@@ -139,6 +139,7 @@ const HikePage = ({user, onDeleteHike, onJoinHike, onLeaveHike}) => {
                     comments.map((comment, index) => (
                         <div key={index} className="comment-frame">
                             <p>User: {comment.user_id}</p>
+                            
                             <p>Comment: {comment.text}</p>
                             {(user.id === comment.user_id || hike.owner_id === user.id) ?
                                 <>

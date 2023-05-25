@@ -40,7 +40,7 @@ const HikeList = ({user}) => {
                 <ul>
                     {myHikes ? <>
                         {myHikes.map((hike) => (
-                            <li key={hike.id}>ID: {hike.id}, Title: <Link to={`/hikes/${hike.id}`}>{hike.title}</Link></li>
+                            <li key={hike.id}> Hike Title: <Link to={`/hikes/${hike.id}`}>{hike.title}</Link></li>
                         ))}
                     </> : null}
                 </ul>
@@ -49,7 +49,7 @@ const HikeList = ({user}) => {
                 <h2>All Hikes</h2>
                 <ul>
                     {allHikes.map((hike) => (
-                        <li key={hike.id}>ID: {hike.id}, Title: <Link to={`/hikes/${hike.id}`}>{hike.title}</Link></li>
+                        <li key={hike.id}>Hike Title: <Link to={`/hikes/${hike.id}`}>{hike.title}</Link></li>
                     ))}
                 </ul>
             </Column>
@@ -58,7 +58,7 @@ const HikeList = ({user}) => {
                 <ul>
                     {participantHikes ? <>
                         {participantHikes.map((hike) => (
-                            <li key={hike.id}>ID: {hike.id}, Title: <Link to={`/hikes/${hike.id}`}>{hike.title}</Link></li>
+                            <li key={hike.id}> Hike Title: <Link to={`/hikes/${hike.id}`}>{hike.title}</Link></li>
                         ))}
                     </> : null}
 
